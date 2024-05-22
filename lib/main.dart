@@ -13,69 +13,119 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:drift/native.dart';
 import 'dart:io';
-
-Future<DriftIsolate> createDriftIsolate() async {
-  final dbFolder = await getApplicationDocumentsDirectory();
-  final path = p.join(dbFolder.path, 'shared_db.sqlite');
-  final driftIsolate = await DriftIsolate.spawn(() {
-    return NativeDatabase(File(path));
-  });
-  return driftIsolate;
-}
-
-
+import 'package:shared_database/shared_database.dart';
 
 
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  final isolate = await createDriftIsolate();
-  kDebugPrint('Application 1: DriftIsolate created successfully: $isolate');
+  // Ensure Application 1 creates and registers the DriftIsolate.
+  final driftIsolate  = await createDriftIsolate();
 
-  // final receivePort = ReceivePort();
-  // final sendPort = receivePort.sendPort;
-  //
-  // bool isRegistered = IsolateNameServer.registerPortWithName(
-  //   sendPort,
-  //   'audit_db_local_isolate',
-  // );
-  //
-  // if (isRegistered) {
-  //   kDebugPrint('SendPort registered successfully in Application 1');
-  // } else {
-  //   kDebugPrint('Failed to register SendPort in Application 1');
-  // }
-  //
-  // receivePort.listen((message) {
-  //   // Handle incoming messages if needed
-  //   kDebugPrint('Received message: $message');
-  // });
+  // Register the isolate's send port with a unique name
+  final registered = IsolateNameServer.registerPortWithName(
+    driftIsolate.connectPort,
+    'drift_isolate',
+  );
 
-  // // Ensure that the databases are initialized properly in separate isolates before running the app.
-  await DatabaseIsolate.createAndRegisterDriftIsolate(AuditDatabaseType.local);
-  await DatabaseIsolate.createAndRegisterDriftIsolate(AuditDatabaseType.remote);
-  runApp(const MyApp());
+  if (!registered) {
+    print('Failed to register drift isolate.');
+  } else {
+    print('Drift isolate registered successfully.');
+  }
+
+
+  runApp(MyApp(driftIsolate: driftIsolate));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+  final DriftIsolate driftIsolate;
+
+  const MyApp({super.key, required this.driftIsolate});
 
 
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomeScreen(driftIsolate: driftIsolate),
     );
   }
 }
+
+
+class HomeScreen extends StatelessWidget {
+  final DriftIsolate driftIsolate;
+
+  const HomeScreen({super.key, required this.driftIsolate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Application 1')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                final connection = await driftIsolate.connect();
+                final db = SharedDatabase(connection);
+                for (var i = 0; i < 25; i++) {
+                  await Future.delayed(const Duration(milliseconds: 500));
+                  final userId = await db.into(db.userTable).insert(UserTableCompanion.insert(name: 'User from App 1'));
+                  print('Inserted user with id: $userId');
+                }
+              },
+              child: Text('Insert Users from App 1'),
+            ),
+            SizedBox.fromSize(size: const Size(0, 20)),
+            ElevatedButton(
+              onPressed: () async {
+                final sendPort = IsolateNameServer.lookupPortByName('drift_isolate');
+                if (sendPort == null) {
+                  print('Failed to find the Drift isolate.');
+                } else {
+                  final driftIsolate = DriftIsolate.fromConnectPort(sendPort);
+                  final connection = await driftIsolate.connect();
+                  final db = SharedDatabase(connection);
+                  final users = await db.select(db.userTable).get();
+                  for (var user in users) {
+                    print('User: ${user.id}, ${user.name}');
+                  }
+                }
+
+              },
+              child: Text('Fetch Users from App 1'),
+            ),
+            SizedBox.fromSize(size: const Size(0, 20)),
+            ElevatedButton(
+              onPressed: () async {
+                // to check if the isolate is registered
+                final sendPort = IsolateNameServer.lookupPortByName('drift_isolate');
+                if (sendPort == null) {
+                  print('Failed to find the Drift isolate.');
+                } else {
+                  //If the isolate is found, it connects to it,
+                  print('Drift isolate found. Inserting a user...');
+                  final driftIsolate = DriftIsolate.fromConnectPort(sendPort);
+                  final connection = await driftIsolate.connect();
+                  final db = SharedDatabase(connection);
+                  final userId = await db.into(db.userTable).insert(UserTableCompanion.insert(name: 'User inserted from Check button'));
+                  print('Inserted user with id: $userId');
+                }
+              },
+              child: Text('Check Isolate Registration'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

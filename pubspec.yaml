@@ -1,0 +1,60 @@
+name: application_1
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  device_info_fetcher:
+  log_db_package:
+  pax_api_plugin:
+  scotch_dev_error:
+  sqlite_postgresql_connector:
+  yaml_parser_fetcher:
+  audit_db_package:
+  cupertino_icons: ^1.0.6
+
+dependency_overrides:
+
+  shared_database:
+    path: ../shared_database
+
+  device_info_fetcher:
+    git: https://github.com/Flutter-Apps-pty/device_info_fetcher
+  log_db_package:
+    git: https://github.com/Flutter-Apps-pty/log_db_package
+  pax_api_plugin:
+    git: https://github.com/Flutter-Apps-pty/pax_api_plugin
+  scotch_dev_error:
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_dev_error.git
+      ref: feat/pepkor_mvp_codes
+  sqlite_postgresql_connector:
+    git: https://github.com/Flutter-Apps-pty/sqlite_postgresql_connector.git
+  yaml_parser_fetcher:
+    git: https://github.com/Flutter-Apps-pty/yaml_parser_fetcher
+  audit_db_package:
+    path: ../audit_db_package
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^3.0.0
+
+
+flutter:
+
+
+  uses-material-design: true
+

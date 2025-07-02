@@ -28,21 +28,40 @@ dependency_overrides:
     path: ../shared_database
 
   device_info_fetcher:
-    git: https://github.com/Flutter-Apps-pty/device_info_fetcher
-  log_db_package:
-    git: https://github.com/Flutter-Apps-pty/log_db_package
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/utils/device_info_fetcher
+
+
   pax_api_plugin:
-    git: https://github.com/Flutter-Apps-pty/pax_api_plugin
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/pax/pax_api_plugin
+
   scotch_dev_error:
     git:
-      url: https://github.com/Flutter-Apps-pty/scotch_dev_error.git
-      ref: feat/pepkor_mvp_codes
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/utils/scotch_dev_error
+
+
   sqlite_postgresql_connector:
-    git: https://github.com/Flutter-Apps-pty/sqlite_postgresql_connector.git
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/databases/sqlite_postgresql_connector
+  log_db_package:
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/databases/log_db_package
   yaml_parser_fetcher:
-    git: https://github.com/Flutter-Apps-pty/yaml_parser_fetcher
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/utils/yaml_parser_fetcher
+
   audit_db_package:
-    path: ../audit_db_package
+    git:
+      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+      path: packages/databases/audit_db_package
+
 
 
 dev_dependencies:

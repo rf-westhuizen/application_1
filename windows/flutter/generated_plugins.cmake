@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  newpos_sdk
   pax_api_plugin
   sqlite3_flutter_libs
 )

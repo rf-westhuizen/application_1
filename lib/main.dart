@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:audit_db_package/audit_db_package.dart';
 import 'package:device_info_fetcher/device_info_fetcher.dart';
 import 'package:flutter/material.dart';
+import 'package:log_db_package/log_db_package.dart';
 import 'package:scotch_dev_error/logging/logging.dart';
 import 'package:sqlite_postgresql_connector/sqlite_postgresql_connector.dart';
 import 'package:yaml_parser_fetcher/yaml_parser_fetcher.dart';
@@ -22,6 +23,9 @@ void main() async {
 
   // Initialize the SharedDatabase
   await SharedDatabase.initialize();
+
+  // await AuditDb.listenerInit();
+  // await LogDb.listenerInit();
 
   runApp(MyApp());
 }
@@ -128,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
     kDebugPrint('inside application 1:');
 
     // Check if the local database isolate is accessible
-    final localDb = await AuditDb.local();
+    final localDb = await AuditDb.localSqlite();
     kDebugPrint('Local database initialized: ${localDb != null}');
 
     // Check if the remote database isolate is accessible
@@ -213,8 +217,8 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       // insert into the local sqlite
-      final localDb = await AuditDb.local();
-      await localDb.auditDao.createRequest(record);
+      final localDb = await AuditDb.localSqlite();
+      await localDb!.auditDao.createRequest(record);
 
       kDebugPrint('Record inserted: $record');
 
@@ -251,8 +255,8 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
       // insert into the local sqlite
-      final localDb = await AuditDb.local();
-      await localDb.auditDao.createRequest(record);
+      final localDb = await AuditDb.localSqlite();
+      await localDb!.auditDao.createRequest(record);
 
       kDebugPrint('Record inserted: $record');
 

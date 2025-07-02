@@ -26,6 +26,28 @@ void main() async {
 
   // await AuditDb.listenerInit();
   // await LogDb.listenerInit();
+  Future<String> getDeviceSerial() async {
+    final deviceSerial = await getDeviceInfo().aSyncSerial;
+    return deviceSerial;
+  }
+
+  Future<String> getYamlSoftware() async {
+    final yamlSoftware = await getYamlData().aSyncSoftware;
+    return yamlSoftware;
+  }
+
+  Future<String> getYamlVersion() async {
+    final yamlVersion = await getYamlData().aSyncVersion;
+    return yamlVersion;
+  }
+
+  final deviceSerial = await getDeviceSerial();
+  final deviceSoftware = await getYamlSoftware();
+  final deviceVersion = await getYamlVersion();
+
+  print('deviceInfo: getDeviceSerial: $deviceSerial');
+  print('deviceInfo: getYamlSoftware: $deviceSoftware');
+  print('deviceInfo: getYamlVersion: $deviceVersion');
 
   runApp(MyApp());
 }

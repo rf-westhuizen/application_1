@@ -21,16 +21,22 @@ dependencies:
   yaml_parser_fetcher:
   audit_db_package:
   cupertino_icons: ^1.0.6
+  scotch_analyser:
 
 dependency_overrides:
 
   shared_database:
     path: ../shared_database
 
+  scotch_analyser:
+    path: ../scotch_analyser
+
+  device_info_plus: ^11.1.0
   device_info_fetcher:
-    git:
-      url: https://github.com/Flutter-Apps-pty/scotch_software.git
-      path: packages/utils/device_info_fetcher
+    path: ../scotch_software/packages/utils/device_info_fetcher
+#    git:
+#      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+#      path: packages/utils/device_info_fetcher
 
 
   pax_api_plugin:
@@ -45,22 +51,27 @@ dependency_overrides:
 
 
   sqlite_postgresql_connector:
-    git:
-      url: https://github.com/Flutter-Apps-pty/scotch_software.git
-      path: packages/databases/sqlite_postgresql_connector
+    path: ../scotch_software/packages/databases/sqlite_postgresql_connector
+#    git:
+#      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+#      path: packages/databases/sqlite_postgresql_connector
   log_db_package:
-    git:
-      url: https://github.com/Flutter-Apps-pty/scotch_software.git
-      path: packages/databases/log_db_package
+    path: ../scotch_software/packages/databases/log_db_package
+
+#    git:
+#      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+#      path: packages/databases/log_db_package
   yaml_parser_fetcher:
-    git:
-      url: https://github.com/Flutter-Apps-pty/scotch_software.git
-      path: packages/utils/yaml_parser_fetcher
+    path: ../scotch_software/packages/utils/yaml_parser_fetcher
+#    git:
+#      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+#      path: packages/utils/yaml_parser_fetcher
 
   audit_db_package:
-    git:
-      url: https://github.com/Flutter-Apps-pty/scotch_software.git
-      path: packages/databases/audit_db_package
+    path: ../scotch_software/packages/databases/audit_db_package
+#    git:
+#      url: https://github.com/Flutter-Apps-pty/scotch_software.git
+#      path: packages/databases/audit_db_package
 
 
 
